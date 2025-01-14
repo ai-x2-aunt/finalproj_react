@@ -164,10 +164,10 @@ const SeniorJobApplicationForm = () => {
         ) : (
           <button 
             className="hmk-button hmk-submit-button"
-            onClick={handleSubmit}
+            onClick={() => setShowPdfModal(true)}
           >
-            작성 완료
-            <span className="hmk-button-icon">✅</span>
+            신청서 미리보기
+            <span className="hmk-button-icon">📄</span>
           </button>
         )}
       </div>
