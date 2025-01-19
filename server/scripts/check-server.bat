@@ -1,0 +1,3 @@
+@echo off
+echo Checking for server running on port 4000...
+netstat -ano | findstr :4000 
