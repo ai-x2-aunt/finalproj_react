@@ -1,0 +1,242 @@
+.hmk-sequence-container {
+    min-height: 100vh;
+    background: white;
+    overflow-y: auto;
+    position: relative;
+}
+
+.hmk-sequence-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: white;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hmk-sections-container {
+    padding-top: 60px; /* 헤더 높이만큼 여백 */
+}
+
+.hmk-sequence-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    transition: opacity 0.3s ease;
+}
+
+.hmk-sequence-section.completed {
+    opacity: 1;
+}
+
+.hmk-sequence-section.active {
+    opacity: 1;
+}
+
+.hmk-sequence-content {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.hmk-input-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.hmk-sequence-input {
+    flex: 1;
+    height: 52px;
+    padding: 0 16px;
+    border: 2px solid #E5E5E5;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+.hmk-sequence-input:focus {
+    border-color: #FFB800;
+}
+
+.hmk-sequence-input:disabled {
+    background: white;
+    border-color: #E5E5E5;
+    color: #333;
+    cursor: pointer;
+}
+
+.hmk-sequence-section.completed .hmk-voice-button,
+.hmk-sequence-section.completed .hmk-confirm-button {
+    display: block;
+    opacity: 0.7;
+}
+
+.hmk-sequence-section:not(:last-child) {
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.hmk-voice-button,
+.hmk-confirm-button {
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.hmk-voice-button {
+    background: #FFB800;
+}
+
+.hmk-confirm-button {
+    background: #333;
+}
+
+.hmk-confirm-button:disabled {
+    background: #E5E5E5;
+    cursor: not-allowed;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hmk-sequence-section {
+    animation: slideIn 0.5s ease-out;
+}
+
+.hmk-progress-bar {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hmk-progress-track {
+    flex: 1;
+    height: 4px;
+    background: #E5E5E5;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.hmk-progress-fill {
+    height: 100%;
+    background: #FFB800;
+    transition: width 0.3s ease;
+}
+
+.hmk-progress-step {
+    font-size: 14px;
+    color: #666;
+}
+
+.hmk-back-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.hmk-sequence-question {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+}
+
+.hmk-sequence-footer {
+    padding: 24px;
+}
+
+.hmk-next-button {
+    width: 100%;
+    height: 52px;
+    background: #FFB800;
+    border: none;
+    border-radius: 12px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.hmk-next-button:disabled {
+    background: #E5E5E5;
+    color: #666;
+    cursor: not-allowed;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.hmk-age-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.hmk-age-button {
+    width: 100%;
+    height: 52px;
+    background: white;
+    border: 2px solid #E5E5E5;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hmk-age-button:hover {
+    border-color: #FFB800;
+    background: #FFF9E6;
+}
+
+.hmk-age-button.selected {
+    background: #FFB800;
+    border-color: #FFB800;
+    color: #000;
+}
+
+/* 전화번호 입력 필드 특별 스타일 */
+.hmk-sequence-input[type="tel"] {
+    letter-spacing: 1px;
+}
+
+/* 입력 필드 플레이스홀더 스타일 */
+.hmk-sequence-input::placeholder {
+    color: #999;
+    font-size: 14px;
+} 
