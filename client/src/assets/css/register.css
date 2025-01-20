@@ -16,16 +16,6 @@
     position: relative;
 }
 
-.hmk-back-button {
-    position: absolute;
-    left: 0;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 8px;
-}
-
 .hmk-form-title {
     flex: 1;
     text-align: center;

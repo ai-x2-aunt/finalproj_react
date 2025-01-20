@@ -15,21 +15,19 @@
     right: 0;
     z-index: 100;
     background: white;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 12px 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .hmk-sections-container {
-    padding-top: 60px;
-    height: calc(100vh - 60px);
+    padding-top: 52px;
+    height: calc(100vh - 52px);
     overflow-y: auto;
 }
 
 .hmk-sequence-section {
-    height: calc(100vh - 60px);
+    min-height: calc(100vh - 52px);
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -69,12 +67,13 @@
     border: 2px solid #E5E5E5;
     border-radius: 12px;
     font-size: 16px;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
     background: white;
 }
 
 .hmk-sequence-input:focus {
-    border-color: #FFB800;
+    border-color: #00C4B8;
+    outline: none;
 }
 
 .hmk-sequence-input:disabled {
@@ -108,7 +107,18 @@
 }
 
 .hmk-voice-button {
-    background: #FFB800;
+    background: #00C4B8;
+    opacity: 0.8;
+}
+
+.hmk-voice-button:hover:not(:disabled) {
+    opacity: 1;
+}
+
+.hmk-voice-button.recording {
+    background: #ff4444;
+    opacity: 1;
+    animation: pulse 1.5s infinite;
 }
 
 .hmk-confirm-button {
@@ -120,39 +130,103 @@
     cursor: not-allowed;
 }
 
-.hmk-progress-bar {
-    padding: 12px;
+.hmk-progress-text {
     display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.hmk-progress-track {
-    flex: 1;
-    height: 4px;
-    background: #E5E5E5;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.hmk-progress-fill {
-    height: 100%;
-    background: #FFB800;
-    transition: width 0.3s ease;
-}
-
-.hmk-progress-step {
-    font-size: 14px;
+    justify-content: space-between;
+    margin-bottom: 10px;
     color: #666;
 }
 
-.hmk-back-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #333;
-    cursor: pointer;
-    padding: 8px;
+.hmk-progress-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 48px;
+    position: relative;
+}
+
+.hmk-progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+}
+
+.hmk-progress-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #E5E5E5;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.hmk-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #00C4B8;
+    transition: width 0.3s ease;
+}
+
+.hmk-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.hmk-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+}
+
+.hmk-step-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid #E5E5E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 12px;
+    color: #666;
+}
+
+.hmk-step.completed .hmk-step-circle {
+    background: #00C4B8;
+    border-color: #00C4B8;
+    color: white;
+}
+
+.hmk-step.active .hmk-step-circle {
+    border-color: #00C4B8;
+    color: #00C4B8;
+    border-width: 2px;
+}
+
+.hmk-step-label {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+}
+
+.hmk-step.completed .hmk-step-label {
+    color: #00C4B8;
+}
+
+.hmk-step.active .hmk-step-label {
+    color: #00C4B8;
+    font-weight: 500;
 }
 
 .hmk-sequence-question {
@@ -185,9 +259,17 @@
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .hmk-age-buttons {
@@ -234,17 +316,13 @@
 
 .hmk-sequence-input.voice-mode {
     background-color: #f5f5f5;
-    cursor: not-allowed;
+    border-color: #E5E5E5;
+    color: #666;
 }
 
 .hmk-voice-button:disabled {
     background: #E5E5E5;
     cursor: not-allowed;
-}
-
-.hmk-voice-button.recording {
-    background: #ff4444;
-    animation: pulse 1.5s infinite;
 }
 
 .hmk-confirm-button-container {
@@ -255,7 +333,8 @@
 }
 
 .hmk-confirm-button {
-    width: 50%;  /* 인풋창의 절반 크기 */
+    width: 50%;
+    /* 인풋창의 절반 크기 */
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
@@ -298,4 +377,29 @@
 
 .hmk-sequence-section.completed:hover {
     opacity: 1;
-} 
+}
+
+.hmk-back-button {
+    position: absolute;
+    left: 20px;
+    top: 140%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 8px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 101;
+}
+
+.hmk-back-button:hover {
+    opacity: 0.8;
+}
+
+.hmk-back-button:active {
+    transform: scale(0.95);
+}
