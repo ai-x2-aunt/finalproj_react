@@ -51,12 +51,32 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 32px;
+    min-height: 200px;
+    position: relative;
+}
+
+.hmk-input-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 }
 
 .hmk-input-container {
+    width: 100%;
     display: flex;
     gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.hmk-input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
     align-items: center;
 }
 
@@ -64,6 +84,7 @@
     flex: 1;
     height: 52px;
     padding: 0 16px;
+    padding-right: 40px;
     border: 2px solid #E5E5E5;
     border-radius: 12px;
     font-size: 16px;
@@ -122,7 +143,15 @@
 }
 
 .hmk-confirm-button {
-    background: #333;
+    background-color: #00C4B8;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .hmk-confirm-button:disabled {
@@ -273,18 +302,19 @@
 }
 
 .hmk-age-buttons {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    width: 100%;
 }
 
 .hmk-age-button {
     width: 100%;
     height: 52px;
-    background: white;
+    padding: 0 16px;
     border: 2px solid #E5E5E5;
     border-radius: 12px;
+    background: white;
     font-size: 16px;
     font-weight: 500;
     color: #333;
@@ -293,14 +323,21 @@
 }
 
 .hmk-age-button:hover {
-    border-color: #FFB800;
-    background: #FFF9E6;
+    border-color: #00C4B8;
 }
 
 .hmk-age-button.selected {
-    background: #FFB800;
-    border-color: #FFB800;
-    color: #000;
+    border-color: #00C4B8;
+    background: #00C4B8;
+    color: white;
+}
+
+.hmk-age-button.completed {
+    opacity: 0.7;
+}
+
+.hmk-age-button.completed:hover {
+    opacity: 1;
 }
 
 /* 전화번호 입력 필드 특별 스타일 */
@@ -363,20 +400,11 @@
     border-color: #e0e0e0;
     background-color: #ffffff;
     color: #333333;
+    cursor: pointer;
 }
 
-.hmk-age-button.completed {
-    border-color: #e0e0e0;
-    background-color: #ffffff;
-    color: #333333;
-}
-
-.hmk-sequence-section.completed {
-    opacity: 0.9;
-}
-
-.hmk-sequence-section.completed:hover {
-    opacity: 1;
+.hmk-sequence-input.completed:hover {
+    border-color: #00C4B8;
 }
 
 .hmk-back-button {
@@ -402,4 +430,50 @@
 
 .hmk-back-button:active {
     transform: scale(0.95);
+}
+
+/* 초기화 버튼 스타일 */
+.hmk-clear-button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    font-size: 20px;
+    line-height: 1;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.hmk-clear-button:hover {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+/* 확인 버튼 컨테이너 */
+.hmk-confirm-button-wrapper {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+/* 확인 버튼이 보여질 때의 스타일 */
+.hmk-confirm-button-wrapper.show {
+    opacity: 1;
+    visibility: visible;
 }
