@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone, faArrowLeft, faCheck, faArrowDown } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,149 @@ const audioGuides = {
     4: '/static/audio/guides/address_question.mp3'  // "어디 사세요?"
 };
 
+// AgeButtonGroup 컴포넌트 수정
+const AgeButtonGroup = memo(({ value, onChange, isCompleted, onConfirm, step }) => {
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleAgeSelect = (age) => {
+        onChange('age', age);
+    };
+
+    const handleClick = () => {
+        if (isCompleted) {
+            setIsEditing(true);
+        }
+    };
+
+    return (
+        <div className="hmk-input-area">
+            <div className="hmk-input-container">
+                <div className="hmk-age-buttons">
+                    {['50대', '60대', '70대', '80대', '90대 이상'].map((age) => (
+                        <button
+                            key={age}
+                            type="button"
+                            className={`hmk-age-button ${value === age ? 'selected' : ''} ${isCompleted && !isEditing ? 'completed' : ''}`}
+                            onClick={() => handleAgeSelect(age)}
+                        >
+                            {age}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            <div className={`hmk-confirm-button-wrapper ${value ? 'show' : ''}`}>
+                <button 
+                    className="hmk-confirm-button"
+                    onClick={() => onConfirm(step)}
+                >
+                    확인
+                </button>
+            </div>
+        </div>
+    );
+});
+
+// Section 컴포넌트를 파일 최상단으로 분리
+const Section = memo(({ step, question, field, value, onChange, onConfirm, isCompleted, currentStep, sectionsRef }) => {
+    const sectionRef = useRef(null);
+    const [isEditing, setIsEditing] = useState(false);  // 편집 모드 상태 추가
+    const [editValue, setEditValue] = useState(value);  // 편집 중인 값 상태 추가
+
+    // sectionsRef에 현재 섹션의 ref 등록
+    useEffect(() => {
+        sectionsRef.current[step] = sectionRef.current;
+    }, [step, sectionsRef]);
+
+    useEffect(() => {
+        setEditValue(value);
+    }, [value]);
+
+    // 입력 핸들러
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+        setEditValue(newValue);
+        onChange(field, newValue);
+    };
+
+    // 입력 필드 클릭 핸들러
+    const handleInputClick = () => {
+        if (isCompleted) {
+            setIsEditing(true);
+            setEditValue('');  // 기존 값 초기화
+        }
+    };
+
+    // 편집 완료 핸들러
+    const handleEditComplete = () => {
+        if (editValue.trim()) {
+            setIsEditing(false);
+            onConfirm(step);
+        }
+    };
+
+    // 입력값 초기화 핸들러
+    const handleClear = (e) => {
+        e.stopPropagation();  // 이벤트 버블링 방지
+        onChange(field, '');
+    };
+
+    return (
+        <div ref={sectionRef} className={`hmk-sequence-section ${isCompleted ? 'completed' : ''} ${currentStep === step ? 'active' : ''}`}>
+            <div className="hmk-sequence-content">
+                <h2 className="hmk-sequence-question">{question}</h2>
+                {field === 'age' ? (
+                    <AgeButtonGroup
+                        value={value}
+                        onChange={onChange}
+                        isCompleted={isCompleted}
+                        onConfirm={onConfirm}
+                        step={step}
+                    />
+                ) : (
+                    <div className="hmk-input-area">
+                        <div className="hmk-input-container">
+                            <div className="hmk-input-wrapper">
+                                <input
+                                    type={field === 'phone' ? 'tel' : 'text'}
+                                    className={`hmk-sequence-input ${isCompleted && !isEditing ? 'completed' : ''}`}
+                                    value={isEditing ? editValue : value}
+                                    onChange={handleChange}
+                                    onClick={handleInputClick}
+                                    placeholder={field === 'phone' ? '전화번호를 입력해주세요' : 
+                                               field === 'address' ? '주소를 입력해주세요' : '입력해주세요'}
+                                />
+                                {value && (
+                                    <button 
+                                        className="hmk-clear-button"
+                                        onClick={handleClear}
+                                        type="button"
+                                    >
+                                        ×
+                                    </button>
+                                )}
+                            </div>
+                            <button 
+                                className="hmk-voice-button"
+                                onClick={() => onConfirm(step)}
+                            >
+                                <FontAwesomeIcon icon={faMicrophone} />
+                            </button>
+                        </div>
+                        <div className={`hmk-confirm-button-wrapper ${((isEditing && editValue.trim()) || (!isCompleted && value.trim())) ? 'show' : ''}`}>
+                            <button 
+                                className="hmk-confirm-button"
+                                onClick={isEditing ? handleEditComplete : () => onConfirm(step)}
+                            >
+                                {isEditing ? '수정 완료' : '확인'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+});
+
 const ResumeSequence = () => {
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
@@ -30,15 +173,17 @@ const ResumeSequence = () => {
     });
     const [isListening, setIsListening] = useState(false);
     const [completedSteps, setCompletedSteps] = useState([]);
-    const inputRef = useRef(null);
     const sectionsRef = useRef([]);
     const { isRecording, error, startRecording, checkSilence } = useVoiceRecording();
-    const [audioBlob, setAudioBlob] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
     // 폼 데이터가 변경될 때마다 로컬 스토리지에 저장
     useEffect(() => {
-        localStorage.setItem('resumeFormData', JSON.stringify(formData));
+        const timer = setTimeout(() => {
+            localStorage.setItem('resumeFormData', JSON.stringify(formData));
+        }, 500); // 디바운스 시간 설정
+
+        return () => clearTimeout(timer);
     }, [formData]);
 
     // 모든 단계가 완료되었는지 확인
@@ -60,14 +205,18 @@ const ResumeSequence = () => {
         }
     };
 
-    // TTS 함수 수정
-    const speak = async (step) => {
+    // speak 함수를 useCallback으로 메모이제이션
+    const speak = useCallback(async (step) => {
+        console.log(`speak 함수 호출: step ${step}`);
         try {
             const audioUrl = `http://localhost:8000${audioGuides[step]}`;
             const audio = new Audio(audioUrl);
             
             return new Promise((resolve) => {
-                audio.onended = () => resolve();
+                audio.onended = () => {
+                    console.log(`speak 함수 완료: step ${step}`);
+                    resolve();
+                };
                 audio.onerror = () => {
                     console.error('오디오 재생 중 오류');
                     resolve();
@@ -77,10 +226,10 @@ const ResumeSequence = () => {
         } catch (error) {
             console.error('음성 안내 재생 중 오류:', error);
         }
-    };
+    }, []); // 빈 의존성 배열
 
     // STT 기능 - 답변 받기
-    const startListening = async (field) => {
+    const startListeningHandler = async (field) => {
         if (isProcessing) return;
         
         try {
@@ -171,28 +320,26 @@ const ResumeSequence = () => {
     };
 
     // handleConfirm 함수 수정
-    const handleConfirm = async (step) => {
+    const handleConfirm = useCallback((step) => {
         if (!completedSteps.includes(step)) {
             setCompletedSteps(prev => [...prev, step]);
             setCurrentStep(step + 1);
             
-            // 다음 섹션으로 스크롤 - sectionsRef 활용
+            // 다음 섹션으로 스크롤
             setTimeout(() => {
                 if (sectionsRef.current[step + 1]) {
                     sectionsRef.current[step + 1].scrollIntoView({
                         behavior: 'smooth',
-                        block: 'start',
-                        inline: 'nearest'
+                        block: 'start'
                     });
                 }
             }, 100);
 
-            // 다음 단계의 음성 안내 재생
-            if (step + 1 <= 4) {  // 마지막 단계 체크
-                await speak(step + 1);
+            if (step + 1 <= 4) {
+                speak(step + 1);
             }
         }
-    };
+    }, [completedSteps, speak]);
 
     // 질문 텍스트 가져오기
     const getQuestionForStep = (step) => {
@@ -210,145 +357,30 @@ const ResumeSequence = () => {
         }
     };
 
-    // 나이 선택을 위한 버튼 그룹 컴포넌트
-    const AgeButtonGroup = ({ value, onChange, disabled }) => (
-        <div className="hmk-age-buttons">
-            {['50대', '60대', '70대', '80대', '90대 이상'].map((age) => (
-                <button
-                    key={age}
-                    type="button"
-                    className={`hmk-age-button ${value === age ? 'selected' : ''}`}
-                    onClick={() => onChange('age', age)}
-                    disabled={disabled}
-                >
-                    {age}
-                </button>
-            ))}
-        </div>
-    );
+    // 입력값 변경 핸들러를 메모이제이션
+    const handleInputChange = useCallback((field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    }, []);
 
-    // 각 섹션 컴포넌트
-    const Section = ({ step, question, field, value, onChange, onConfirm, isCompleted }) => {
-        const sectionRef = useRef(null);
-        const [isListening, setIsListening] = useState(false);
-
-        useEffect(() => {
-            sectionsRef.current[step] = sectionRef.current;
-        }, [step]);
-
-        const handleVoiceInput = async () => {
-            if (isProcessing) return;
-            
-            try {
-                setIsListening(true);
-                
-                // 주소 필드인 경우
-                if (field === 'address') {
-                    await startListening('address');
-                } else {
-                    await startListening(field);
-                }
-                
-            } catch (error) {
-                console.error('음성 입력 오류:', error);
-            } finally {
-                setIsListening(false);
-            }
-        };
-
-        return (
-            <div 
-                ref={sectionRef}
-                className={`hmk-sequence-section ${isCompleted ? 'completed' : ''} ${currentStep === step ? 'active' : ''}`}
-            >
-                <div className="hmk-sequence-content">
-                    <h2 className="hmk-sequence-question">
-                        {question}
-                    </h2>
-                    {field === 'age' ? (
-                        <div className="hmk-input-container">
-                            <AgeButtonGroup 
-                                value={value}
-                                onChange={onChange}
-                                disabled={false}
-                            />
-                        </div>
-                    ) : (
-                        <div className="hmk-input-container">
-                            <input
-                                type={field === 'phone' ? 'tel' : 'text'}
-                                className={`hmk-sequence-input ${isCompleted ? 'completed' : ''}`}
-                                value={value}
-                                onChange={(e) => onChange(field, e.target.value)}
-                                disabled={false}
-                                placeholder={field === 'phone' ? '전화번호를 말씀해주세요' : 
-                                           field === 'address' ? '주소를 말씀해주세요' : '말씀해주세요'}
-                            />
-                            <button 
-                                className={`hmk-voice-button ${isListening ? 'listening' : ''}`}
-                                onClick={handleVoiceInput}
-                                disabled={isProcessing}
-                            >
-                                <FontAwesomeIcon icon={faMicrophone} />
-                            </button>
-                        </div>
-                    )}
-                    <div className="hmk-confirm-button-container">
-                        <button 
-                            className={`hmk-confirm-button ${!value ? 'disabled' : ''}`}
-                            onClick={() => onConfirm(step)}
-                            disabled={!value}
-                        >
-                            확인
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    // 컴포넌트 마운트 시 첫 번째 안내 음성 재생
+    // 컴포넌트 마운트 시 첫 번째 안내 음성 재생 (의존성 배열 수정)
     useEffect(() => {
-        localStorage.removeItem('resumeFormData');
         speak(1);  // 첫 번째 질문 재생
         return () => {
             localStorage.removeItem('resumeFormData');
         };
-    }, []);
+    }, []); // 빈 의존성 배열로 변경
 
-    const handleVoiceInput = async () => {
+    const handleVoiceInput = async (field) => {
         try {
             setIsProcessing(true);
             
             // 1. 음성 녹음 시작
-            await startRecording();
+            await startListeningHandler(field);
             
-            // 2. 5초 동안 침묵 감지 시작
-            checkSilence(async (audioBlob) => {
-                if (!audioBlob) return;
-                
-                try {
-                    // 3. STT 변환
-                    const sttText = await voiceService.speechToText(audioBlob);
-                    console.log("STT 결과:", sttText);
-                    
-                    // 4. 주소 매칭
-                    const matchResult = await voiceService.matchAddress(sttText);
-                    console.log("매칭 결과:", matchResult);
-                    
-                    // 5. 주소 설정
-                    if (matchResult.matched_address) {
-                        const addr = matchResult.matched_address;
-                        const fullAddress = `${addr.city} ${addr.district} ${addr.town} ${addr.road_name} ${addr.building_main_num}${addr.building_sub_num ? '-'+addr.building_sub_num : ''}`;
-                        setFormData(prev => ({...prev, address: fullAddress}));
-                    }
-                } catch (error) {
-                    console.error('주소 처리 중 오류:', error);
-                } finally {
-                    setIsProcessing(false);
-                }
-            }, 5000); // 5초 침묵 감지
-            
+            setIsProcessing(false);
         } catch (error) {
             console.error('음성 입력 중 오류:', error);
             setIsProcessing(false);
@@ -371,54 +403,66 @@ const ResumeSequence = () => {
                     <div className="hmk-progress-track">
                         <div 
                             className="hmk-progress-fill"
-                            style={{ width: `${(completedSteps.length / 10) * 100}%` }}
+                            style={{ width: `${(completedSteps.length / 4) * 100}%` }} // 수정: 단계 수에 맞게 변경
                         ></div>
                     </div>
-                    <span className="hmk-progress-step">{completedSteps.length}/10</span>
+                    <span className="hmk-progress-step">{completedSteps.length}/4</span>
                 </div>
             </div>
 
             <div className="hmk-sections-container">
                 <Section 
+                    key={1}
                     step={1}
                     question="이름이 어떻게 되세요?"
                     field="name"
                     value={formData.name}
-                    onChange={(field, value) => setFormData(prev => ({...prev, [field]: value}))}
+                    onChange={handleInputChange}
                     onConfirm={handleConfirm}
                     isCompleted={completedSteps.includes(1)}
+                    currentStep={currentStep}
+                    sectionsRef={sectionsRef}
                 />
                 {completedSteps.includes(1) && (
                     <Section 
+                        key={2}
                         step={2}
                         question="나이가 어떻게 되세요?"
                         field="age"
                         value={formData.age}
-                        onChange={(field, value) => setFormData(prev => ({...prev, [field]: value}))}
+                        onChange={handleInputChange}
                         onConfirm={handleConfirm}
                         isCompleted={completedSteps.includes(2)}
+                        currentStep={currentStep}
+                        sectionsRef={sectionsRef}
                     />
                 )}
                 {completedSteps.includes(2) && (
                     <Section 
+                        key={3}
                         step={3}
                         question="전화번호가 어떻게 되세요?"
                         field="phone"
                         value={formData.phone}
-                        onChange={(field, value) => setFormData(prev => ({...prev, [field]: value}))}
+                        onChange={handleInputChange}
                         onConfirm={handleConfirm}
                         isCompleted={completedSteps.includes(3)}
+                        currentStep={currentStep}
+                        sectionsRef={sectionsRef}
                     />
                 )}
                 {completedSteps.includes(3) && (
                     <Section 
+                        key={4}
                         step={4}
                         question="어디 사세요?"
                         field="address"
                         value={formData.address}
-                        onChange={(field, value) => setFormData(prev => ({...prev, [field]: value}))}
+                        onChange={handleInputChange}
                         onConfirm={handleConfirm}
                         isCompleted={completedSteps.includes(4)}
+                        currentStep={currentStep}
+                        sectionsRef={sectionsRef}
                     />
                 )}
             </div>
@@ -438,4 +482,4 @@ const ResumeSequence = () => {
     );
 };
 
-export default ResumeSequence; 
+export default ResumeSequence;
