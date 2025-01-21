@@ -1,0 +1,246 @@
+.container {
+    max-width: 768px;
+    margin: 0 auto;
+    background-color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    z-index: 100;
+  }
+  
+  .back-button {
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .title {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .share-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .content {
+    flex: 1;
+    padding-bottom: 80px;
+  }
+  
+  .registration-date {
+    padding: 8px 16px;
+    color: #666;
+    font-size: 14px;
+    text-align: right;
+  }
+  
+  .company-name {
+    color: #666;
+    font-size: 15px;
+    padding: 20px 16px 8px;
+  }
+  
+  .job-title {
+    font-size: 20px;
+    margin: 0;
+    padding: 0 16px 16px;
+    line-height: 1.4;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .tab-container {
+    display: flex;
+    padding: 0 16px;
+    margin-bottom: 16px;
+    gap: 8px;
+  }
+  
+  .tab {
+    padding: 6px 12px;
+    border: 1px solid #ffe082;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+  }
+  
+  .section {
+    margin-bottom: 32px;
+    background: #fff;
+    padding: 24px 0;
+    border-top: 8px solid #f5f5f5;
+  }
+  
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 0 20px;
+    margin: 0 0 20px;
+    position: relative;
+    color: #222;
+  }
+  
+  .section-title:after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    bottom: -8px;
+    width: 80px;
+    height: 3px;
+    background-color: #ffd338;
+  }
+  
+  .section-title.contact:after {
+    width: 145px;
+  }
+  
+  .info-table {
+    padding: 0 20px;
+  }
+  
+  .info-row {
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+    flex-wrap: wrap;
+  }
+  
+  .info-row:last-child {
+    border-bottom: none;
+  }
+  
+  .label {
+    width: 100px;
+    color: #444;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .value {
+    flex: 1;
+    color: #222;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .value > div {
+    margin-top: 12px;
+    width: 100%;
+  }
+  
+  .detail-list {
+    list-style: none;
+    padding: 0 20px;
+    margin: 0;
+  }
+  
+  .detail-item {
+    position: relative;
+    padding: 12px 0 12px 16px;
+    font-size: 16px;
+    color: #222;
+    line-height: 1.5;
+  }
+  
+  .detail-item:before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #ffd338;
+  }
+  
+  .contact-info {
+    padding: 24px 0;
+    background: #fff;
+    margin-top: 8px;
+    border-top: 8px solid #f5f5f5;
+  }
+  
+  .button-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 768px;
+    margin: 0 auto;
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    z-index: 10;
+  }
+  
+  .apply-button {
+    flex: 1;
+    height: 48px;
+    background-color: #ffd338;
+    color: #333;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .bookmark-button {
+    width: 48px;
+    height: 48px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .bookmark-button img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .bookmark-button.active {
+    border-color: #ffd338;
+  }
+  
+  .bookmark-button.active img {
+    /* 활성화됐을 때의 스타일을 여기에 추가할 수 있습니다 */
+  }
+  
+  .bookmark-button:hover {
+    background: #f8f9fa;
+  }
+  
+  .url-link {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  
+  .url-link:hover {
+    text-decoration: underline;
+  }
