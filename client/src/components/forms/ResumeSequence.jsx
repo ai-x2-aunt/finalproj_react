@@ -7,12 +7,12 @@ import { voiceService } from '../../api/voiceService';
 import { useVoiceRecording } from '../../hooks/useVoiceRecording';
 import axios from 'axios';
 
-// 미리 녹음된 안내 음성 파일 import
+// 미리 녹음된 안내 음성 파일 경로 수정
 const audioGuides = {
-    1: '/static/audio/guides/name_question.mp3',    // "이름이 어떻게 되세요?"
-    2: '/static/audio/guides/age_question.mp3',     // "나이가 어떻게 되세요?"
-    3: '/static/audio/guides/phone_question.mp3',   // "전화번호가 어떻게 되세요?"
-    4: '/static/audio/guides/address_question.mp3'  // "어디 사세요?"
+    1: `${process.env.REACT_APP_API_URL}/static/audio/guides/name_question.mp3`,
+    2: `${process.env.REACT_APP_API_URL}/static/audio/guides/age_question.mp3`,
+    3: `${process.env.REACT_APP_API_URL}/static/audio/guides/phone_question.mp3`,
+    4: `${process.env.REACT_APP_API_URL}/static/audio/guides/address_question.mp3`
 };
 
 // AgeButtonGroup 컴포넌트 수정
@@ -205,28 +205,54 @@ const ResumeSequence = () => {
         }
     };
 
-    // speak 함수를 useCallback으로 메모이제이션
+    // speak 함수 수정
     const speak = useCallback(async (step) => {
         console.log(`speak 함수 호출: step ${step}`);
         try {
-            const audioUrl = `http://localhost:8000${audioGuides[step]}`;
-            const audio = new Audio(audioUrl);
+            const audioUrl = audioGuides[step];
+            console.log('오디오 URL:', audioUrl);
+
+            const response = await fetch(audioUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const blob = await response.blob();
+            const audio = new Audio(URL.createObjectURL(blob));
+            
+            audio.playsinline = true;
+            audio.preload = 'auto';
             
             return new Promise((resolve) => {
+                audio.oncanplaythrough = () => {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise
+                            .then(() => {
+                                console.log('오디오 재생 시작');
+                            })
+                            .catch(error => {
+                                console.error('오디오 재생 실패:', error);
+                                resolve();
+                            });
+                    }
+                };
+                
                 audio.onended = () => {
-                    console.log(`speak 함수 완료: step ${step}`);
+                    URL.revokeObjectURL(audio.src); // 메모리 해제
                     resolve();
                 };
-                audio.onerror = () => {
-                    console.error('오디오 재생 중 오류');
+                
+                audio.onerror = (e) => {
+                    console.error('오디오 로드 중 오류:', e);
+                    URL.revokeObjectURL(audio.src); // 메모리 해제
                     resolve();
                 };
-                audio.play();
             });
         } catch (error) {
             console.error('음성 안내 재생 중 오류:', error);
+            return Promise.resolve();
         }
-    }, []); // 빈 의존성 배열
+    }, []);
 
     // STT 기능 - 답변 받기
     const startListeningHandler = async (field) => {

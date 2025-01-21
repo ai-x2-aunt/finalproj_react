@@ -12,6 +12,7 @@ import ResumeManagement from './components/manage/resume/ResumeManagement';
 import RecommendManagement from './components/manage/recommend/RecommendManagement';
 import ResumeStart from './components/forms/ResumeStart';
 import ResumeSequence from './components/forms/ResumeSequence';
+import IntroStep from './components/forms/introStep';
 import './assets/css/seniorForm.css';
 import './assets/css/manage.css';
 
@@ -39,6 +40,7 @@ function App() {
 
         <Route path="/resume/start" element={<ResumeStart />} />
         <Route path="/resume/create" element={<ResumeSequence />} />
+        <Route path="/intro" element={<IntroStep />} />
       </Routes>
     </Router>
   );
