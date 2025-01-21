@@ -1,0 +1,138 @@
+:root {
+    --primary-color: #F3F2EE;
+    --main_yellow: #FFBC2C;
+}
+
+body {
+    background-color: white;
+}
+
+.post-section {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--primary-color);
+}
+
+.post-card {
+    height: 100%;
+    margin: 10px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+}
+
+/* 헤더 영역 */
+.post-card-header {
+    margin-bottom: 20px;
+}
+
+.post-card-header-info {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 13px;
+}
+
+.post-card-header-info-type,
+.post-card-header-info-dday {
+    background: #F3F3F3;
+    border: 1px solid #B6B6B6;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.post-card-header-info-type p,
+.post-card-header-info-dday p {
+    margin: 0;
+    font-family: 'Pretendard';
+    font-weight: 600;
+    font-size: 19px;
+    color: #737373;
+}
+
+.post-card-header-company p {
+    margin: 0;
+    font-family: 'Pretendard';
+    font-weight: 500;
+    font-size: 19px;
+    color: #737373;
+    margin-bottom: 6px;
+}
+
+.post-card-header-title h1 {
+    margin: 0;
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 38px;
+    color: #000000;
+}
+
+/* 본문 영역 */
+.post-card-body-table {
+    margin: 20px 0;
+}
+
+.table-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.table-row .label {
+    width: 100px;
+    font-family: 'Pretendard';
+    font-weight: 500;
+    font-size: 21px;
+    color: #000000;
+}
+
+.table-row .value {
+    flex: 1;
+    font-family: 'Pretendard';
+    font-weight: 500;
+    font-size: 21px;
+    color: #737373;
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    background: #D5D5D5;
+    margin: 15px 0;
+}
+
+/* 푸터 영역 */
+.post-card-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.post-card-footer > button {
+    background-color: white;
+    border: 1px solid var(--main_yellow);
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.post-card-footer-detail {
+    flex: 1;
+    height: 50px;
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-size: 20px;
+    color: #222222;
+}
+
+.post-card-footer-bookmark {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-card-footer-bookmark img {
+    width: 24px;
+    height: 24px;
+}

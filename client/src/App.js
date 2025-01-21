@@ -1,8 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
 import Welcome from './components/forms/welcome';
 import RegisterIntro from './components/forms/RegisterIntro';
 import Register from './components/forms/Register';
+
+// 관리자
 import ManageLayout from './components/manage/layout/ManageLayout';
 import Dashboard from './components/manage/dashboard/Dashboard';
 import UserManagement from './components/manage/users/UserManagement';
@@ -12,6 +15,12 @@ import ResumeManagement from './components/manage/resume/ResumeManagement';
 import RecommendManagement from './components/manage/recommend/RecommendManagement';
 import ResumeStart from './components/forms/ResumeStart';
 import ResumeSequence from './components/forms/ResumeSequence';
+
+// 공고
+import PostList from './components/post/PostList';
+import PostDetail from './components/post/PostDetail';
+
+// 스타일
 import './assets/css/seniorForm.css';
 import './assets/css/manage.css';
 
@@ -21,7 +30,7 @@ function App() {
       <Routes>
         {/* 메인 웰컴 페이지 */}
         <Route path="/" element={<Welcome />} />
-        
+
         {/* 회원가입 관련 페이지들 */}
         <Route path="/register" element={<RegisterIntro />} />
         <Route path="/register/form" element={<Register />} />
@@ -39,6 +48,14 @@ function App() {
 
         <Route path="/resume/start" element={<ResumeStart />} />
         <Route path="/resume/create" element={<ResumeSequence />} />
+
+        {/* 공고 페이지 */}
+        <Route path="/post">
+          <Route index element={<Navigate to="/post/list" replace />} />
+          <Route path="list" element={<PostList />} />
+          <Route path="detail/:domain/:id" element={<PostDetail />} />
+        </Route>
+
       </Routes>
     </Router>
   );
