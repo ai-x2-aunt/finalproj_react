@@ -43,7 +43,7 @@ const Welcome = () => {
                 </button>
                 <span 
                     className="hmk-guest-link"
-                    onClick={() => navigate('/resume/start')}
+                    onClick={() => navigate('/intro')}
                 >
                     비회원으로 시작하기
                 </span>
