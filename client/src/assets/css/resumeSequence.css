@@ -409,8 +409,7 @@
 
 .hmk-back-button {
     position: absolute;
-    left: 20px;
-    top: 140%;
+    top: 45%;
     transform: translateY(-50%);
     background: none;
     border: none;
