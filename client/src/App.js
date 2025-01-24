@@ -13,6 +13,8 @@ import RecommendManagement from './components/manage/recommend/RecommendManageme
 import ResumeStart from './components/forms/ResumeStart';
 import ResumeSequence from './components/forms/ResumeSequence';
 import IntroStep from './components/forms/introStep';
+import Index from './pages/index';
+
 import './assets/css/seniorForm.css';
 import './assets/css/manage.css';
 
@@ -22,6 +24,7 @@ function App() {
       <Routes>
         {/* 메인 웰컴 페이지 */}
         <Route path="/" element={<Welcome />} />
+        <Route path="/index" element={<Index />} />
         
         {/* 회원가입 관련 페이지들 */}
         <Route path="/register" element={<RegisterIntro />} />
