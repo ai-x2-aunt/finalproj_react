@@ -79,3 +79,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 >>>>>>> e1657d7 (Initial commit)
 =======
 >>>>>>> e5ee7193b18cc07c1d14dcc433dba39ed5d2b766
+
+# finalproj_react
+어르신JOBGO의 프론트 코드입니다.
