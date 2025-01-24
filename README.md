@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 # finalproj_react
 어르신JOBGO의 프론트 코드입니다.
-=======
-=======
->>>>>>> e5ee7193b18cc07c1d14dcc433dba39ed5d2b766
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -75,10 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-<<<<<<< HEAD
->>>>>>> e1657d7 (Initial commit)
-=======
->>>>>>> e5ee7193b18cc07c1d14dcc433dba39ed5d2b766
+
 
 # finalproj_react
 어르신JOBGO의 프론트 코드입니다.
