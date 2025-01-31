@@ -58,7 +58,7 @@ const Main = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const trimmedText = inputText.trim();
     if(trimmedText === '') return;
 
@@ -72,6 +72,19 @@ const Main = () => {
       },
     ]);
     setInputText('');
+
+    const response = await fetch('http://localhost:8000/chatbot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: trimmedText }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+
   }
 
   const handleOptionClick = (optionId) => {
